@@ -16,8 +16,6 @@ class SpaceInvaders : public Gameplayer
         
       void update_inputs()
       {
-        _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), 0, 0, 47, 39);
-        _lcd->showDisplayBuffer();
       }
       
       void update_objects()
@@ -28,8 +26,10 @@ class SpaceInvaders : public Gameplayer
       {
       }
       
-      virtual void rendering()
+      void rendering()
       {
+		_lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), 0, 0, 47, 39);
+        _lcd->showDisplayBuffer();
       }
   
 };

@@ -26,7 +26,7 @@ class Snake : public Gameplayer
       {
       }
       
-      virtual void rendering()
+      void rendering()
       {
         _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), 0, 0, 47, 39);
         _lcd->showDisplayBuffer();
