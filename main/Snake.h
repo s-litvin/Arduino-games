@@ -4,8 +4,11 @@
 #include <Arduino.h>
 
 class Snake : public Gameplayer
-{
+{      
     Renderer * _lcd;
+    uint8_t _x = 1;
+    uint8_t _p = 1;
+    
     public:
       Snake(){};
 
@@ -20,6 +23,11 @@ class Snake : public Gameplayer
       
       void update_objects()
       {
+        if (_x >= 84 || _x <= 0) {
+          _p *= -1;
+        }
+
+        _x += 10 * _p;
       }
       
       void handle_actions()
@@ -28,7 +36,8 @@ class Snake : public Gameplayer
       
       void rendering()
       {
-        _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), 0, 0, 47, 39);
+        _lcd->fillDisplayBuffer();
+        _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), _x, 0, 47, 39);
         _lcd->showDisplayBuffer();
       }
   

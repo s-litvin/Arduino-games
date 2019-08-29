@@ -71,10 +71,10 @@ class Renderer
         }
       }
       
-      void fillDisplayBuffer(char value = 0, bool fillWithRandom = false)
+      void fillDisplayBuffer(uint8_t value = 0, bool fillWithRandom = false)
       {
-        for (char i=0; i < 6; i++) {
-          for (char j=0; j < 84; j++) {
+        for (uint8_t i=0; i < 6; i++) {
+          for (uint8_t j=0; j < 84; j++) {
             if (fillWithRandom) {
               display_buffer[i][j] = random(255);
             } else {
@@ -86,7 +86,7 @@ class Renderer
       
       void putToBuffer(char value, char posX, char posY, bool showImmediately = true)
       {
-        char column = map(posY, 0, 48, 0, 6);
+        uint8_t column = map(posY, 0, 48, 0, 6);
         char shift = value << (posY - column * 8);
         display_buffer[column][posX] |= shift;   
       
@@ -98,9 +98,9 @@ class Renderer
       
       void showDisplayBuffer()
       {
-          for (char i=0; i < 6; i++) {
+          for (uint8_t i=0; i < 6; i++) {
             cursorToXY(0, i);
-            for (char j=0; j < 84; j++) {
+            for (uint8_t j=0; j < 84; j++) {
               LcdWriteData(display_buffer[i][j]);
             }  
           }     
