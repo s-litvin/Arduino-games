@@ -17,7 +17,7 @@ class Snake : public Gameplayer
         // fill snake
         for (byte i = 0; i < 251; i++) {
           if (i <= 5) {
-            snake[i] =  6 - i;
+            snake[i] =  5 - i;
           } else {
             snake[i] = 255;  // 255 - cell is empty
           }
@@ -37,7 +37,12 @@ class Snake : public Gameplayer
             if (i > 0) {
               snake[i] =  snake[i - 1];
             } else {
-              snake[i] = snake[i] + 1;
+              if (snake[i] != 251) {
+                snake[i] = snake[i] + 1;
+              } else {
+                snake[i] = 0;
+              }
+              
             }
           }
         }
