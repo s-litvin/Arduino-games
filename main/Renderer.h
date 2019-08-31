@@ -15,7 +15,9 @@ class Renderer
 {
  
     public:
+    
       byte display_buffer[6][84];
+      
       Renderer() 
       {
         pinMode(RST, OUTPUT);
@@ -84,10 +86,13 @@ class Renderer
         }
       }
       
-      void putToBuffer(char value, char posX, char posY, bool showImmediately = true)
+      void putToBuffer(char value, char posX, char posY, bool showImmediately = false)
       {
         uint8_t column = map(posY, 0, 48, 0, 6);
-        char shift = value << (posY - column * 8);
+        byte shift = value << (posY - column * 8);
+
+        byte clear_position = -1 ^ shift;
+        display_buffer[column][posX] &= clear_position;
         display_buffer[column][posX] |= shift;   
       
         if (showImmediately) {

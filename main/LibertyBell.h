@@ -1,26 +1,20 @@
-#ifndef Snake_h
-#define Snake_h
+#ifndef LibertyBell_h
+#define LibertyBell_h
 
 #include <Arduino.h>
 
-class Snake : public Gameplayer
+class LibertyBell : public Gameplayer
 {      
     Renderer * _lcd;
     uint8_t _x = 1;
     uint8_t _p = 1;
-
-    byte snake[252];
     
     public:
-      Snake(Renderer *lcd)
+      LibertyBell(Renderer *lcd)
       {
         _lcd = lcd;
-
-        for (byte i = 0; i < 251; i++) {
-          snake[i] = i; 
-        }
       };
-        
+      
       void update_inputs()
       {
       }

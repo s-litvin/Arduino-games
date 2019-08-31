@@ -2,24 +2,27 @@
 #include "Gameplayer.h"
 #include "Snake.h";
 #include "SpaceInvaders.h";
+#include "LibertyBell.h";
 
 Renderer lcd = Renderer();
 Gameplayer * game;
 
-Snake snakeGame = Snake();
-SpaceInvaders invadersGame = SpaceInvaders();
 
 void setup()
 {
   lcd.init();
 
-  if (true) { // game switching
-    game = &snakeGame;
-  } else {
-    game = &invadersGame;
+  switch(1) {
+    case 1:
+      game = new Snake(&lcd);
+      break;
+    case 2:
+      game = new SpaceInvaders(&lcd);
+      break;
+    case 3:
+      game = new LibertyBell(&lcd);
+      break;
   }
-  
-  game->initRenderer(&lcd);
 }
 
 void loop()
@@ -31,7 +34,4 @@ void loop()
     game->rendering(); 
 
 }
-
-
-
 
