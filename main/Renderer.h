@@ -52,13 +52,13 @@ class Renderer
        
       void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY)
       {  
-        unsigned char s = imageSize;
+        unsigned char bitmapSize = imageSize;
         int bloc_number = 0;
         int current_bit = 7;
       
         for(int x = posX; x < (posX + sizeX);  x++){  
           for(int y = posY; y < (posY + sizeY);  y++){
-            if (bloc_number < s) {
+            if (bloc_number < bitmapSize) {
               if (current_bit < 0) {
                 current_bit = 7;
                 bloc_number++; 
@@ -71,6 +71,12 @@ class Renderer
           bloc_number++;
           current_bit = 7;
         }
+      }
+
+      byte getPixelFromBuffer(char posX, char posY)
+      {
+        uint8_t column = map(posY, 0, 48, 0, 6);
+        return 1 & (display_buffer[column][posX] >> (posY - column * 8));
       }
       
       void fillDisplayBuffer(uint8_t value = 0, bool fillWithRandom = false)

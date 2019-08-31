@@ -33,5 +33,7 @@ void loop()
     game->handle_actions(); 
     game->rendering(); 
 
+    delay(800);
+
 }
 

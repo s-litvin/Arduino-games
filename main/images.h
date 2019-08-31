@@ -1,6 +1,30 @@
 
 #include <Arduino.h>
 
+// circle 4x4
+const uint8_t PROGMEM circle4x4[] = { 
+  0b01100000, 
+  0b11110000,
+  0b11110000,
+  0b01100000, 
+};
+
+// circle hollow 4x4
+const uint8_t PROGMEM circle_hollow4x4[] = { 
+  0b01100000, 
+  0b10010000,
+  0b10010000,
+  0b01100000, 
+};
+
+//// square
+const uint8_t PROGMEM square4x4[] = { 
+  0b11110000, 
+  0b10010000,
+  0b10010000,
+  0b11110000, 
+};
+
 // penis 47x39
 const uint8_t PROGMEM test_Bitmap[] = { 
 0x00, 0x00, 0x00, 0x10, 0x00, 

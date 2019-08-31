@@ -6,8 +6,6 @@
 class Snake : public Gameplayer
 {      
     Renderer * _lcd;
-    uint8_t _x = 1;
-    uint8_t _p = 1;
 
     byte snake[252];
     
@@ -16,9 +14,15 @@ class Snake : public Gameplayer
       {
         _lcd = lcd;
 
+        // fill snake
         for (byte i = 0; i < 251; i++) {
-          snake[i] = i; 
+          if (i <= 5) {
+            snake[i] =  6 - i;
+          } else {
+            snake[i] = 255;  // 255 - cell is empty
+          }
         }
+
       };
         
       void update_inputs()
@@ -27,11 +31,16 @@ class Snake : public Gameplayer
       
       void update_objects()
       {
-        if (_x >= 84 || _x <= 0) {
-          _p *= -1;
+        // fill snake
+        for (int i = 251; i >= 0; i--) {
+          if (snake[i] != 255) {
+            if (i > 0) {
+              snake[i] =  snake[i - 1];
+            } else {
+              snake[i] = snake[i] + 1;
+            }
+          }
         }
-
-        _x += 10 * _p;
       }
       
       void handle_actions()
@@ -41,8 +50,28 @@ class Snake : public Gameplayer
       void rendering()
       {
         _lcd->fillDisplayBuffer();
-        _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), _x, 0, 47, 39);
+        
+        for (byte i = 0; i < 251; i++) {
+          if (snake[i] != 255) {
+            _lcd->drawImage(
+              circle_hollow4x4, sizeof(circle_hollow4x4), 
+              getXPositionFromCellNumber(snake[i]), 
+              getYPositionFromCellNumber(snake[i]), 
+              4, 4);   
+          }
+        }
+        
         _lcd->showDisplayBuffer();
+      }
+
+      int getXPositionFromCellNumber(byte cell_number)
+      {
+        return (cell_number % 21) * 4;
+      }
+
+      int getYPositionFromCellNumber(byte cell_number)
+      {
+        return (cell_number / 21) * 4;
       }
   
 };
