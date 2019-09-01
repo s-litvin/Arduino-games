@@ -35,7 +35,7 @@ class SpaceInvaders : public Gameplayer
       void rendering()
       {
         _lcd->fillDisplayBuffer();
-        _lcd->drawImage(test_Bitmap, sizeof(test_Bitmap), _x, 0, 47, 39);
+        _lcd->drawImage(snake84x48, sizeof(snake84x48), _x, 0, 84, 48);
         _lcd->showDisplayBuffer();
       }
   

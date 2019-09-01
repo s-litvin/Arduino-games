@@ -42,7 +42,7 @@ class Renderer
 
         fillDisplayBuffer();
 
-        drawImage(test_Bitmap, sizeof(test_Bitmap), 0, 0, 47, 39);
+        drawImage(snake84x48, sizeof(snake84x48), 0, 0, 84, 48);
         showDisplayBuffer();
         delay(700);
 //
@@ -52,24 +52,30 @@ class Renderer
        
       void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0)
       {  
-        unsigned char bitmapSize = imageSize;
-        int bloc_number = 0;
+        int bitmapSize = imageSize;
+        unsigned int bloc_number = 0;
         int current_bit = 7;
-      
-        for(int x = posX; x < (posX + sizeX);  x++){  
-          for(int y = posY; y < (posY + sizeY);  y++){
+        unsigned char memory_block = pgm_read_word_near(image + bloc_number);
+          unsigned char tmp_block = memory_block;
+
+        for(int x = posX; x < (posX + sizeX);  x++) {
+          for(int y = posY; y < (posY + sizeY);  y++) {
             if (bloc_number < bitmapSize) {
               if (current_bit < 0) {
                 current_bit = 7;
                 bloc_number++; 
+                memory_block = pgm_read_word_near(image + bloc_number);
+                tmp_block = memory_block;
               }
-              unsigned char curr = pgm_read_word_near(image + bloc_number);
-              putToBuffer((curr >> (current_bit - shiftBits) ) & 1, x, y, false);
+
+              putToBuffer((tmp_block >> (current_bit - shiftBits) ) & 1, x, y, false);
               current_bit--;
             }
           }
           bloc_number++;
           current_bit = 7;
+          memory_block = pgm_read_word_near(image + bloc_number);
+          tmp_block = memory_block;
         }
       }
 
