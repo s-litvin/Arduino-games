@@ -123,11 +123,16 @@ class Snake : public Gameplayer
 
       void drawFood()
       {
+        byte shift = 0;
+        if ((foodPosition % 10) > 5) {
+          shift = 4;
+        }
+
         _lcd->drawImage(
-              circle_hollow4x4, sizeof(circle_hollow4x4), 
+              foods4x4, sizeof(foods4x4), 
               getXPositionFromCellNumber(foodPosition), 
               getYPositionFromCellNumber(foodPosition), 
-              4, 4);
+              4, 4, shift);
       }
 
       void drawSnake()
@@ -135,7 +140,7 @@ class Snake : public Gameplayer
         for (byte i = 0; i < 251; i++) {
           if (snake[i] != 255) {
             _lcd->drawImage(
-              circle4x4, sizeof(circle4x4), 
+              circles4x4, sizeof(circles4x4), 
               getXPositionFromCellNumber(snake[i]), 
               getYPositionFromCellNumber(snake[i]), 
               4, 4);   
@@ -161,6 +166,7 @@ class Snake : public Gameplayer
 
       void initNewSnake()
       {
+        snakeSize = 4;
         // fill snake
         for (byte i = 0; i < 251; i++) {
           if (i <= snakeSize) {

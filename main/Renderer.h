@@ -50,7 +50,7 @@ class Renderer
 //        showDisplayBuffer();
       }
        
-      void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY)
+      void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0)
       {  
         unsigned char bitmapSize = imageSize;
         int bloc_number = 0;
@@ -64,7 +64,7 @@ class Renderer
                 bloc_number++; 
               }
               unsigned char curr = pgm_read_word_near(image + bloc_number);
-              putToBuffer((curr >> current_bit ) & 1, x, y, false);
+              putToBuffer((curr >> (current_bit - shiftBits) ) & 1, x, y, false);
               current_bit--;
             }
           }
