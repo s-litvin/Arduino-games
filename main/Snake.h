@@ -25,10 +25,7 @@ class Snake : public Gameplayer
       {
         _lcd = lcd;
 
-        pinMode(BUTTON, INPUT_PULLUP);
-
         initNewSnake();
-
       };
         
       void update_inputs()
@@ -62,8 +59,12 @@ class Snake : public Gameplayer
         } else {
           _lcd->showDisplayBuffer();
           showScore();
-        }
-        
+        } 
+      }
+
+      static unsigned char * getPreviewImg()
+      {
+        return snake84x48;
       }
 
       int getXPositionFromCellNumber(byte cell_number)
@@ -170,7 +171,7 @@ class Snake : public Gameplayer
         // fill snake
         for (byte i = 0; i < 251; i++) {
           if (i <= snakeSize) {
-            snake[i] =  snakeSize - i;
+            snake[i] = 86 + snakeSize - i;
           } else {
             snake[i] = 255;  // 255 - cell is empty
           }

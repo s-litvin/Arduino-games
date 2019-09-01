@@ -38,6 +38,11 @@ class LibertyBell : public Gameplayer
         _lcd->drawImage(snake84x48, sizeof(snake84x48), _x, 0, 47, 39);
         _lcd->showDisplayBuffer();
       }
+
+      static unsigned char * getPreviewImg()
+      {
+        return snake84x48;
+      }
   
 };
 

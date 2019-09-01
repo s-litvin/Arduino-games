@@ -16,6 +16,9 @@ class Gameplayer
       virtual void handle_actions() = 0;
       
       virtual void rendering() = 0;
+
+      static unsigned char * getPreviewImg(){};
+      
 };
 
 #endif

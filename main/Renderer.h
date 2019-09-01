@@ -42,12 +42,13 @@ class Renderer
 
         fillDisplayBuffer();
 
-        drawImage(snake84x48, sizeof(snake84x48), 0, 0, 84, 48);
+        drawImage(main_logo84x48, sizeof(main_logo84x48), 0, 0, 84, 48);
         showDisplayBuffer();
-        delay(700);
-//
-//        fillDisplayBuffer();
-//        showDisplayBuffer();
+        delay(3500);
+
+        fillDisplayBuffer();
+        showDisplayBuffer();
+        delay(500);
       }
        
       void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0)
@@ -56,7 +57,7 @@ class Renderer
         unsigned int bloc_number = 0;
         int current_bit = 7;
         unsigned char memory_block = pgm_read_word_near(image + bloc_number);
-          unsigned char tmp_block = memory_block;
+        unsigned char tmp_block = memory_block;
 
         for(int x = posX; x < (posX + sizeX);  x++) {
           for(int y = posY; y < (posY + sizeY);  y++) {
