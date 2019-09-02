@@ -36,22 +36,26 @@ void setup()
 
     char direction = 0;
     char not_pressed = 1;
-    while (direction == 0 && not_pressed != 0) {
+    while (direction == 0 && not_pressed == 1) {
       delay(5);
-      direction = map(analogRead(A0), 0, 1024, -2, 2);
+      direction = -1 * map(analogRead(A0), 0, 1024, -1, 2);
       not_pressed = digitalRead(BUTTON);
     }
 
-    delay(30);
+    page = page + direction;
 
-    page = (page + direction) % 3;
+    if (page > 3) {
+      page = 1;
+    } else if (page == 0) {
+      page = 3;
+    }
 
     if (!not_pressed) {
       choice = page;
     }
   }
 
-  switch(1) {
+  switch(page) {
     case 1:
       game = new Snake(&lcd);
       break;
@@ -62,6 +66,7 @@ void setup()
       game = new LibertyBell(&lcd);
       break;
   }
+
 }
 
 void loop()
@@ -72,7 +77,7 @@ void loop()
     game->handle_actions(); 
     game->rendering(); 
 
-    delay(240);
+    delay(game->getDelayBetweenFrames());
 
 }
 

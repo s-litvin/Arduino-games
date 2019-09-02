@@ -39,6 +39,11 @@ class SpaceInvaders : public Gameplayer
         _lcd->showDisplayBuffer();
       }
 
+      unsigned int getDelayBetweenFrames()
+      {
+        return 250;
+      }
+
       static unsigned char * getPreviewImg()
       {
         return space_invaders84x48;

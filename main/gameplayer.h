@@ -17,6 +17,8 @@ class Gameplayer
       
       virtual void rendering() = 0;
 
+      virtual unsigned int getDelayBetweenFrames() = 0;
+
       static unsigned char * getPreviewImg(){};
       
 };

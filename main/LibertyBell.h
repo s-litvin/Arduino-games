@@ -4,28 +4,52 @@
 #include <Arduino.h>
 
 class LibertyBell : public Gameplayer
-{      
+{    
+    #define BUTTON 8    
+
     Renderer * _lcd;
     uint8_t _x = 1;
     uint8_t _p = 1;
+
+    byte symbols[6];
+    byte rotations = 0;
     
     public:
       LibertyBell(Renderer *lcd)
       {
         _lcd = lcd;
+
+        for (byte i = 0; i < 6; i++) {
+          symbols[i] = random(1, 4);
+        } 
+
       };
       
       void update_inputs()
       {
+        if (rotations == 0) {
+          char direction = 0;
+          while (digitalRead(BUTTON) && direction == 0) {
+            direction = map(analogRead(A1), 0, 1024, -1, 2);
+          }
+          rotations = random(10, 17);
+        }
       }
       
       void update_objects()
       {
-        if (_x >= 84 || _x <= 0) {
-          _p *= -1;
-        }
+        if (rotations > 0) {
+          
+          for (byte i = 0; i < 3; i++) {
+            symbols[3 + i] = symbols[i];
+          }
+          
+          for (byte i = 0; i < 3; i++) {
+            symbols[i] = random(1, 4);
+          }
 
-        _x += 10 * _p;
+          rotations--; 
+        } 
       }
       
       void handle_actions()
@@ -35,13 +59,38 @@ class LibertyBell : public Gameplayer
       void rendering()
       {
         _lcd->fillDisplayBuffer();
-        _lcd->drawImage(snake84x48, sizeof(snake84x48), _x, 0, 47, 39);
+
+        char positions[6][2] = {
+          {4, 5}, {24, 5}, {44, 5},
+          {4, 21}, {24, 21}, {44, 21}
+        };
+        for(char i = 0; i < 6; i++) {
+          switch (symbols[i]) {
+            case 1:
+              _lcd->drawImage(cherry16x16, sizeof(cherry16x16), positions[i][0], positions[i][1], 16, 16);
+              break;
+            case 2:
+              _lcd->drawImage(seven16x16, sizeof(seven16x16), positions[i][0], positions[i][1], 16, 16);
+              break;
+            case 3:
+              _lcd->drawImage(peach16x16, sizeof(peach16x16), positions[i][0], positions[i][1], 16, 16);
+              break;
+          }
+        }
+        
+        _lcd->drawImage(casinobackground84x48, sizeof(casinobackground84x48), 0, 0, 84, 48);
         _lcd->showDisplayBuffer();
+        
+      }
+
+      unsigned int getDelayBetweenFrames()
+      {
+        return 1;
       }
 
       static unsigned char * getPreviewImg()
       {
-        return snake84x48;
+        return bell84x48;
       }
   
 };

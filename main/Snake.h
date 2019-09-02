@@ -62,6 +62,11 @@ class Snake : public Gameplayer
         } 
       }
 
+      unsigned int getDelayBetweenFrames()
+      {
+        return 250;
+      }
+
       static unsigned char * getPreviewImg()
       {
         return snake84x48;

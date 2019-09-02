@@ -51,7 +51,7 @@ class Renderer
         delay(500);
       }
        
-      void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0)
+      void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0, bool showImmediately = false)
       {  
         int bitmapSize = imageSize;
         unsigned int bloc_number = 0;
@@ -69,7 +69,7 @@ class Renderer
                 tmp_block = memory_block;
               }
 
-              putToBuffer((tmp_block >> (current_bit - shiftBits) ) & 1, x, y, false);
+              putToBuffer((tmp_block >> (current_bit - shiftBits) ) & 1, x, y, showImmediately);
               current_bit--;
             }
           }
