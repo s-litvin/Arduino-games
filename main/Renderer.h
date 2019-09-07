@@ -4,12 +4,13 @@
 #define RST 7
 #define CE  6
 #define DC  5
-#define DIN  4
-#define CLK  3
+#define DIN  11
+#define CLK  13
 
 #include <Arduino.h>
 #include "font.h";
 #include "images.h";
+#include <SPI.h>
 
 class Renderer 
 {
@@ -20,6 +21,7 @@ class Renderer
       
       Renderer() 
       {
+        SPI.begin();
         pinMode(RST, OUTPUT);
         pinMode(CE, OUTPUT);
         pinMode(DC, OUTPUT);
@@ -34,7 +36,7 @@ class Renderer
         LcdWriteCmd(0x21);  // LCD extended commands
         LcdWriteCmd(0xbf);  // set LCD Vop (contrast)
         LcdWriteCmd(0x04);  // set temp coefficent
-        LcdWriteCmd(0x14);  // LCD bias mode 1:40
+        LcdWriteCmd(0x13);  // LCD bias mode 1:48, 0x14 - 1:40
         LcdWriteCmd(0x20);  // LCD basic commands
         LcdWriteCmd(0x0c);  // LCD normal video
 
@@ -104,7 +106,7 @@ class Renderer
         uint8_t column = map(posY, 0, 48, 0, 6);
         byte shift = value << (posY - column * 8);
 
-        byte clear_position = -1 ^ shift;
+        byte clear_position = -1 ^ (1 << (posY - column * 8));
         display_buffer[column][posX] &= clear_position;
         display_buffer[column][posX] |= shift;   
       
@@ -139,7 +141,8 @@ class Renderer
       void transmitData(byte data)
       {
         digitalWrite(CE, LOW);
-        shiftOut(DIN, CLK, MSBFIRST, data); //transmit serial data
+        SPI.transfer(data); //transmit serial data
+//        shiftOut(DIN, CLK, MSBFIRST, data); //transmit serial data
         digitalWrite(CE, HIGH);
       }
       

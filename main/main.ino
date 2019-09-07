@@ -20,7 +20,6 @@ void setup()
   char page = 1;
 
   while (choice == 0) {
-    lcd.fillDisplayBuffer();
     switch(page) {
       case 1:
         lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
