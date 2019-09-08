@@ -4,11 +4,15 @@
 #include <Arduino.h>
 #include "Particle.h"
 
+
 class SpaceInvaders : public Gameplayer
 {
     Renderer * _lcd;
 
     Particle * objects[5];
+    Vector * wind;
+    Vector * gravity;
+    Vector * air;
     
     public:
       SpaceInvaders(Renderer *lcd)
@@ -16,28 +20,69 @@ class SpaceInvaders : public Gameplayer
         _lcd = lcd;
         for (byte i = 0; i < 5; i++) {
           objects[i] = new Particle(random(80), random(40));
+          objects[i]->mass = i * 5 + 1;
         }
+        wind = new Vector(0, 0);
+        gravity = new Vector(0, 0.1);
       };
 
       void update_inputs()
       {
+        int pressedA = digitalRead(9);
+        int pressedB = digitalRead(4);
+
+        if (pressedA == 0) {
+          wind->x = 0.1;
+        } else {
+          wind->x = 0;
+        }
+
       }
       
       void update_objects()
       {
 
+        // Vector center = Vector(42, 24);   
+
         for (byte i = 0; i < 5; i++) {
-          Vector center = Vector(42, 24);
+          // objects[i]->setAccelerationTo(&center, 0.08);
 
-          objects[i]->setAccelerationTo(&center, random(1, 50) / 100.0);
-          // objects[i]->applyForce(&center);
+          // air friction ///
 
+          if (objects[i]->velocity->getMag() != 0) {
+            Vector tmpVector = Vector(objects[i]->velocity->x, objects[i]->velocity->y);
+            tmpVector.mult(-1);
+            tmpVector.normalize();
+            if (digitalRead(4) == 0) {
+              tmpVector.mult(0.3);
+            } else {
+              tmpVector.mult(0.03);
+            }
+            objects[i]->applyForce(&tmpVector);
+          }
+          //////////////////
+
+          // gravity ///
+          Vector tmpVector = Vector(gravity->x, gravity->y);   
+          tmpVector.y *= objects[i]->mass;
+          objects[i]->applyForce(&tmpVector); // gravity
+          /////////////
+
+          // wind ///
+          objects[i]->applyForce(wind);
+          ///////////
+
+          objects[i]->acceleration->div(objects[i]->mass);
+        
           objects[i]->velocity->add(objects[i]->acceleration);
           objects[i]->velocity->limit(2);
           objects[i]->location->add(objects[i]->velocity);
 
+          objects[i]->acceleration->mult(0);
+
           objects[i]->checkBorders();
 
+          // _lcd->printMemory();
         }
       }
       

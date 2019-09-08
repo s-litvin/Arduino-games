@@ -5,6 +5,8 @@
 #include "LibertyBell.h";
 
 #define BUTTON 8
+#define BUTTONA 9
+#define BUTTONB 4
 
 Renderer lcd = Renderer();
 Gameplayer * game;
@@ -14,10 +16,13 @@ void setup()
 {
 
   pinMode(BUTTON, INPUT_PULLUP);
+  pinMode(BUTTONA, INPUT_PULLUP);
+  pinMode(BUTTONB, INPUT_PULLUP);
+
   lcd.init();
 
   byte choice = 0;
-  char page = 1;
+  char page = 2;
 
   // while (choice == 0) {
   //   switch(page) {
@@ -36,9 +41,9 @@ void setup()
   //   char direction = 0;
   //   char not_pressed = 1;
   //   while (direction == 0 && not_pressed == 1) {
-  //     delay(5);
+  //     delay(15);
   //     direction = -1 * map(analogRead(A0), 0, 1024, -1, 2);
-  //     not_pressed = digitalRead(BUTTON);
+  //     not_pressed = digitalRead(BUTTON) && digitalRead(BUTTONA) && digitalRead(BUTTONB);
   //   }
 
   //   page = page + direction;
@@ -54,7 +59,6 @@ void setup()
   //   }
   // }
 
-  page = 2;
   switch(page) {
     case 1:
       game = new Snake(&lcd);

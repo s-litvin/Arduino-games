@@ -36,7 +36,7 @@ class Renderer
         LcdWriteCmd(0x21);  // LCD extended commands
         LcdWriteCmd(0xbf);  // set LCD Vop (contrast)
         LcdWriteCmd(0x04);  // set temp coefficent
-        LcdWriteCmd(0x13);  // LCD bias mode 1:48, 0x14 - 1:40
+        LcdWriteCmd(0x13);  // LCD bias mode 0x13 - 1:48, 0x14 - 1:40
         LcdWriteCmd(0x20);  // LCD basic commands
         LcdWriteCmd(0x0c);  // LCD normal video
 
@@ -46,11 +46,11 @@ class Renderer
 
         drawImage(main_logo84x48, sizeof(main_logo84x48), 0, 0, 84, 48);
         showDisplayBuffer();
-        delay(3500);
+        delay(350);
 
         fillDisplayBuffer();
         showDisplayBuffer();
-        delay(500);
+        delay(50);
       }
 
       int availableMemory() 
@@ -146,7 +146,7 @@ class Renderer
             }  
           }  
 
-          printMemory();  
+          //printMemory();  
       }
       
       void LcdWriteCmd(byte cmd)
