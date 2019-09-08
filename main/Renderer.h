@@ -52,22 +52,44 @@ class Renderer
         showDisplayBuffer();
         delay(500);
       }
+
+      int availableMemory() 
+      {
+        int size = 1024; // Use 2048 with ATmega328
+        byte *buf;
+
+        while ((buf = (byte *) malloc(--size)) == NULL)
+          ;
+
+        free(buf);
+
+        return size;
+      }
+
+      void printMemory()
+      {
+        char text[5];
+        sprintf(text, "%d", availableMemory());
+        cursorToXY(0, 0);
+        LcdWriteString(text);
+      }
+
        
       void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0, bool showImmediately = false)
       {  
         int bitmapSize = imageSize;
-        unsigned int bloc_number = 0;
+        unsigned int block_number = 0;
         int current_bit = 7;
-        unsigned char memory_block = pgm_read_word_near(image + bloc_number);
+        unsigned char memory_block = pgm_read_word_near(image + block_number);
         unsigned char tmp_block = memory_block;
 
         for(int x = posX; x < (posX + sizeX);  x++) {
           for(int y = posY; y < (posY + sizeY);  y++) {
-            if (bloc_number < bitmapSize) {
+            if (block_number < bitmapSize) {
               if (current_bit < 0) {
                 current_bit = 7;
-                bloc_number++; 
-                memory_block = pgm_read_word_near(image + bloc_number);
+                block_number++; 
+                memory_block = pgm_read_word_near(image + block_number);
                 tmp_block = memory_block;
               }
 
@@ -75,9 +97,9 @@ class Renderer
               current_bit--;
             }
           }
-          bloc_number++;
+          block_number++;
           current_bit = 7;
-          memory_block = pgm_read_word_near(image + bloc_number);
+          memory_block = pgm_read_word_near(image + block_number);
           tmp_block = memory_block;
         }
       }
@@ -103,16 +125,15 @@ class Renderer
       
       void putToBuffer(char value, char posX, char posY, bool showImmediately = false)
       {
-        uint8_t column = map(posY, 0, 48, 0, 6);
-        byte shift = value << (posY - column * 8);
+        uint8_t row = map(posY, 0, 48, 0, 6);
 
-        byte clear_position = -1 ^ (1 << (posY - column * 8));
-        display_buffer[column][posX] &= clear_position;
-        display_buffer[column][posX] |= shift;   
+        byte clear_position = -1 ^ (1 << (posY - row * 8));
+        display_buffer[row][posX] &= clear_position;
+        display_buffer[row][posX] |= value << (posY - row * 8);   
       
         if (showImmediately) {
-          cursorToXY(posX, column);
-          LcdWriteData(display_buffer[column][posX]);
+          cursorToXY(posX, row);
+          LcdWriteData(display_buffer[row][posX]);
         }
       }
       
@@ -123,7 +144,9 @@ class Renderer
             for (uint8_t j=0; j < 84; j++) {
               LcdWriteData(display_buffer[i][j]);
             }  
-          }     
+          }  
+
+          printMemory();  
       }
       
       void LcdWriteCmd(byte cmd)

@@ -19,41 +19,42 @@ void setup()
   byte choice = 0;
   char page = 1;
 
-  while (choice == 0) {
-    switch(page) {
-      case 1:
-        lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
-        break;
-      case 2:
-        lcd.drawImage(SpaceInvaders::getPreviewImg(), 504, 0, 0, 84, 48);
-        break;
-      case 3:
-        lcd.drawImage(LibertyBell::getPreviewImg(), 504, 0, 0, 84, 48);
-        break;
-    }
-    lcd.showDisplayBuffer();
+  // while (choice == 0) {
+  //   switch(page) {
+  //     case 1:
+  //       lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
+  //       break;
+  //     case 2:
+  //       lcd.drawImage(SpaceInvaders::getPreviewImg(), 504, 0, 0, 84, 48);
+  //       break;
+  //     case 3:
+  //       lcd.drawImage(LibertyBell::getPreviewImg(), 504, 0, 0, 84, 48);
+  //       break;
+  //   }
+  //   lcd.showDisplayBuffer();
 
-    char direction = 0;
-    char not_pressed = 1;
-    while (direction == 0 && not_pressed == 1) {
-      delay(5);
-      direction = -1 * map(analogRead(A0), 0, 1024, -1, 2);
-      not_pressed = digitalRead(BUTTON);
-    }
+  //   char direction = 0;
+  //   char not_pressed = 1;
+  //   while (direction == 0 && not_pressed == 1) {
+  //     delay(5);
+  //     direction = -1 * map(analogRead(A0), 0, 1024, -1, 2);
+  //     not_pressed = digitalRead(BUTTON);
+  //   }
 
-    page = page + direction;
+  //   page = page + direction;
 
-    if (page > 3) {
-      page = 1;
-    } else if (page == 0) {
-      page = 3;
-    }
+  //   if (page > 3) {
+  //     page = 1;
+  //   } else if (page == 0) {
+  //     page = 3;
+  //   }
 
-    if (!not_pressed) {
-      choice = page;
-    }
-  }
+  //   if (!not_pressed) {
+  //     choice = page;
+  //   }
+  // }
 
+  page = 2;
   switch(page) {
     case 1:
       game = new Snake(&lcd);
