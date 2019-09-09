@@ -23,6 +23,9 @@ class LibertyBell : public Gameplayer
           symbols[i] = random(1, 4);
         } 
 
+        _lcd->fillDisplayBuffer(0xff);
+        rendering();
+        _lcd->showDisplayBuffer();
       };
       
       void update_inputs()
@@ -58,8 +61,6 @@ class LibertyBell : public Gameplayer
       
       void rendering()
       {
-        _lcd->fillDisplayBuffer();
-
         char positions[6][2] = {
           {4, 5}, {24, 5}, {44, 5},
           {4, 21}, {24, 21}, {44, 21}
@@ -67,25 +68,24 @@ class LibertyBell : public Gameplayer
         for(char i = 0; i < 6; i++) {
           switch (symbols[i]) {
             case 1:
-              _lcd->drawImage(cherry16x16, sizeof(cherry16x16), positions[i][0], positions[i][1], 16, 16);
+              _lcd->drawImage(cherry16x16, sizeof(cherry16x16), positions[i][0], positions[i][1], 16, 16, 0, true);
               break;
             case 2:
-              _lcd->drawImage(seven16x16, sizeof(seven16x16), positions[i][0], positions[i][1], 16, 16);
+              _lcd->drawImage(seven16x16, sizeof(seven16x16), positions[i][0], positions[i][1], 16, 16, 0, true);
               break;
             case 3:
-              _lcd->drawImage(peach16x16, sizeof(peach16x16), positions[i][0], positions[i][1], 16, 16);
+              _lcd->drawImage(peach16x16, sizeof(peach16x16), positions[i][0], positions[i][1], 16, 16, 0, true);
               break;
           }
         }
         
-        _lcd->drawImage(casinobackground84x48, sizeof(casinobackground84x48), 0, 0, 84, 48);
-        _lcd->showDisplayBuffer();
+
         
       }
 
       unsigned int getDelayBetweenFrames()
       {
-        return 1;
+        return 5;
       }
 
       static unsigned char * getPreviewImg()

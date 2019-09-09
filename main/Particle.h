@@ -38,17 +38,30 @@ class Particle
 
       void checkBorders()
       {
+        // if (location->x >= 80) {
+        //   location->x = 0;
+        // } else if (location->x < 0) {
+        //   location->x = 80;
+        // }
+
+        // if (location->y > 44) {
+        //   location->y = 0;
+        // } else if (location->y < 0) {
+        //   location->y = 44;
+        // }
         if ((location->x > 80) || (location->x < 0)) {
             location->sub(velocity);
             velocity->x = velocity->x * -1;
             location->add(velocity);
         }
-        if ((location->y > 44) || (location->y < 0)) {
+        if ((location->y > 45) || (location->y < 0)) {
           location->sub(velocity);
           velocity->y = velocity->y * -1;
           location->add(velocity);
         }
       }
+
+
 };
 
 #endif

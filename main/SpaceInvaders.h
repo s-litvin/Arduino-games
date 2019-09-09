@@ -2,7 +2,11 @@
 #define SpaceInvaders_h
 
 #include <Arduino.h>
-#include "Particle.h"
+#include <Particle.h>
+
+#define BUTTON 8
+#define BUTTONA 9
+#define BUTTONB 4
 
 
 class SpaceInvaders : public Gameplayer
@@ -13,14 +17,15 @@ class SpaceInvaders : public Gameplayer
     Vector * wind;
     Vector * gravity;
     Vector * air;
-    
+
     public:
       SpaceInvaders(Renderer *lcd)
       {
         _lcd = lcd;
+
         for (byte i = 0; i < 5; i++) {
-          objects[i] = new Particle(random(80), random(40));
-          objects[i]->mass = i * 5 + 1;
+          objects[i] = new Particle(5 * i + 20, 10);
+          objects[i]->mass = (i + 1) * 3;
         }
         wind = new Vector(0, 0);
         gravity = new Vector(0, 0.1);
@@ -28,15 +33,11 @@ class SpaceInvaders : public Gameplayer
 
       void update_inputs()
       {
-        int pressedA = digitalRead(9);
-        int pressedB = digitalRead(4);
-
-        if (pressedA == 0) {
+        if (digitalRead(BUTTONA) == 0) {
           wind->x = 0.1;
         } else {
           wind->x = 0;
         }
-
       }
       
       void update_objects()
@@ -47,35 +48,36 @@ class SpaceInvaders : public Gameplayer
         for (byte i = 0; i < 5; i++) {
           // objects[i]->setAccelerationTo(&center, 0.08);
 
-          // air friction ///
-
-          if (objects[i]->velocity->getMag() != 0) {
-            Vector tmpVector = Vector(objects[i]->velocity->x, objects[i]->velocity->y);
-            tmpVector.mult(-1);
-            tmpVector.normalize();
-            if (digitalRead(4) == 0) {
-              tmpVector.mult(0.3);
-            } else {
-              tmpVector.mult(0.03);
-            }
-            objects[i]->applyForce(&tmpVector);
-          }
-          //////////////////
-
-          // gravity ///
+          //// gravity ///
           Vector tmpVector = Vector(gravity->x, gravity->y);   
           tmpVector.y *= objects[i]->mass;
           objects[i]->applyForce(&tmpVector); // gravity
           /////////////
 
-          // wind ///
+
+          //// wind ///
           objects[i]->applyForce(wind);
           ///////////
 
+          //// air friction ///
+          if (objects[i]->velocity->getMag() != 0) {
+            Vector tmpVector = Vector(objects[i]->velocity->x, objects[i]->velocity->y);
+            tmpVector.mult(-1);
+            // tmpVector.normalize();
+            if (digitalRead(BUTTONB) == 0) {
+              tmpVector.mult(5);
+            } else {
+              tmpVector.mult(0);
+            }
+            objects[i]->applyForce(&tmpVector);
+          }
+          //////////////////
+
           objects[i]->acceleration->div(objects[i]->mass);
-        
           objects[i]->velocity->add(objects[i]->acceleration);
-          objects[i]->velocity->limit(2);
+
+
+          objects[i]->velocity->limit(random(1, 7));
           objects[i]->location->add(objects[i]->velocity);
 
           objects[i]->acceleration->mult(0);
@@ -107,11 +109,6 @@ class SpaceInvaders : public Gameplayer
       unsigned int getDelayBetweenFrames()
       {
         return 20;
-      }
-
-      static unsigned char * getPreviewImg()
-      {
-        return space_invaders84x48;
       }
   
 };
