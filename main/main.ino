@@ -28,16 +28,19 @@ void setup()
     delay(200);
     switch(page) {
       case 1:
-        lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
+        lcd.LcdWriteString("1");
+        // lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
       case 2:
-        lcd.drawImage(SpaceInvaders::getPreviewImg(), 504, 0, 0, 84, 48);
+        lcd.LcdWriteString("2");
+        // lcd.drawImage(SpaceInvaders::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
       case 3:
-        lcd.drawImage(LibertyBell::getPreviewImg(), 504, 0, 0, 84, 48);
+        lcd.LcdWriteString("3");
+        // lcd.drawImage(LibertyBell::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
     }
-    lcd.showDisplayBuffer();
+    // lcd.showDisplayBuffer();
 
     char direction = 0;
     char not_pressed = 1;

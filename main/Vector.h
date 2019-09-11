@@ -43,8 +43,14 @@ class Vector
 
       void normalize()
       {
-        x /= getMag();
-        y /= getMag();
+        float mag = getMag();
+        if (mag > 0.0001) {
+          x /= mag;
+          y /= mag;
+        } else {
+          x = 0;
+          y = 0;
+        }
       }
 
       void limit(float value)
@@ -63,6 +69,14 @@ class Vector
       {
         normalize();
         mult(value);
+      }
+
+      void rotate(float degree)
+      {
+        float tmpX = x;
+        // convert degrees to radians needed
+        x = x * cos(degree * 3.14 / 180) - y * sin(degree * 3.14 / 180);
+        y = tmpX * sin(degree * 3.14 / 180) + y * cos(degree * 3.14 / 180);
       }
 };
 
