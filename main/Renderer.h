@@ -53,26 +53,26 @@ class Renderer
         delay(50);
       }
 
-      int availableMemory() 
-      {
-        int size = 1024; // Use 2048 with ATmega328
-        byte *buf;
+      // int availableMemory() 
+      // {
+      //   int size = 1024; // Use 2048 with ATmega328
+      //   byte *buf;
 
-        while ((buf = (byte *) malloc(--size)) == NULL)
-          ;
+      //   while ((buf = (byte *) malloc(--size)) == NULL)
+      //     ;
 
-        free(buf);
+      //   free(buf);
 
-        return size;
-      }
+      //   return size;
+      // }
 
-      void printMemory()
-      {
-        char text[5];
-        sprintf(text, "%d", availableMemory());
-        cursorToXY(0, 0);
-        LcdWriteString(text);
-      }
+      // void printMemory()
+      // {
+      //   char text[5];
+      //   sprintf(text, "%d", availableMemory());
+      //   cursorToXY(0, 0);
+      //   LcdWriteString(text);
+      // }
 
        
       void drawImage(const uint8_t *image, int imageSize, byte posX, byte posY, byte sizeX, byte sizeY, byte shiftBits = 0, bool showImmediately = false)

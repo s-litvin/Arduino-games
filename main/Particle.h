@@ -14,7 +14,7 @@ class Particle
       Vector * acceleration;
       Vector * orientation;
 
-      float mass;
+      uint8_t mass;
 
       Particle(float _x, float _y)
       {

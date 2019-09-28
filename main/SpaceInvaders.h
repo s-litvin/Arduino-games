@@ -13,26 +13,16 @@ class SpaceInvaders : public Gameplayer
 {
     Renderer * _lcd;
 
-    Particle * objects[2];
-    // Vector * wind;
-    Vector * gravity;
-    Vector * air;
-    Vector * throast;
+    Particle * rocket;
+    Vector * vars;
 
     public:
       SpaceInvaders(Renderer *lcd)
       {
         _lcd = lcd;
-
-        for (byte i = 0; i < 2; i++) {
-          objects[i] = new Particle((i + 1) * 10, 10);
-          objects[i]->mass = (i + 1) * 10;
-          
-        }
-
-        // wind = new Vector(0, 0);
-        gravity = new Vector(0, 0.01);
-        throast = new Vector(0, 0); 
+        rocket = new Particle(20, 10);
+        rocket->mass = 150;
+        vars = new Vector(0, 0); 
       };
 
       void update_inputs()
@@ -42,56 +32,84 @@ class SpaceInvaders : public Gameplayer
       
       void update_objects()
       {
-
         // Vector center = Vector(42, 24);   
+        // rocket->setAccelerationTo(&center, 0.08);
 
-        for (byte i = 0; i < 2; i++) {
-          // objects[i]->setAccelerationTo(&center, 0.08);
+        //// gravity ///
+        vars->x = 0;
+        vars->y = 0.04; 
+        vars->mult(rocket->mass);
+        rocket->applyForce(vars); // gravity
+        /////////////
 
-          //// gravity ///
-          Vector tmpVector = Vector(gravity->x, gravity->y);   
-          tmpVector.y *= objects[i]->mass;
-          objects[i]->applyForce(&tmpVector); // gravity
-          objects[i]->applyForce(gravity);
-          /////////////
-
-          //// air friction ///
-          if (objects[i]->velocity->getMag() != 0) {
-            tmpVector = Vector(objects[i]->velocity->x, objects[i]->velocity->y);
-            tmpVector.normalize();
-            tmpVector.mult(-0.01);
-            objects[i]->applyForce(&tmpVector);
-          }
-          //////////////////
-
-          ////// throast ///
-          int degree = -1 * map(analogRead(A0), 0, 1024, -1, 2);
-          if (degree > 0) {
-            objects[i]->orientation->rotate(degree);
-          }
-
-          if (digitalRead(BUTTONA) == 0) {
-            tmpVector = Vector(objects[i]->orientation->x, objects[i]->orientation->y);
-            tmpVector.normalize();
-            tmpVector.mult(0.3);
-            objects[i]->applyForce(&tmpVector);
-          }
-          //////////////////
-
-          objects[i]->acceleration->div(objects[i]->mass);
-
-          objects[i]->velocity->add(objects[i]->acceleration);
-
-          objects[i]->velocity->limit(1);
-
-          objects[i]->location->add(objects[i]->velocity);
-
-          objects[i]->acceleration->mult(0);
-
-          objects[i]->checkBorders();
-
-          // _lcd->printMemory();
+        //// air friction with drag ///
+        if (rocket->velocity->getMag() != 0) {
+          vars->x = rocket->velocity->x;
+          vars->y = rocket->velocity->y;
+          vars->normalize();
+          vars->mult(-0.01 * rocket->velocity->getMag() * rocket->velocity->getMag());
+          rocket->applyForce(vars);
         }
+        //////////////////
+
+        ////// throast ///
+        int degree = map(analogRead(A0), 0, 1024, 2, -2);
+        if (degree != 0) {
+          rocket->orientation->rotate(2 * degree);
+        }
+
+        if (digitalRead(BUTTONA) == 0) {
+          vars->x = rocket->orientation->x;
+          vars->y = rocket->orientation->y;
+          vars->normalize();
+          vars->mult(9);
+          rocket->applyForce(vars);
+        }
+        //////////////////
+
+        //// mass 
+        rocket->acceleration->div(rocket->mass);
+        rocket->velocity->add(rocket->acceleration);
+
+
+        //////// COLLISIONS ///////////
+        if ((rocket->location->x + rocket->velocity->x) > (80)) {
+          rocket->location->x = 0;
+        } else if ((rocket->location->x + rocket->velocity->x) < 0) {
+          rocket->location->x = 80;
+        }
+
+        if (
+          (rocket->location->y + rocket->velocity->y) > 40 ||
+          (rocket->location->y + rocket->velocity->y) <= 1
+        ) {
+        
+          if (rocket->velocity->y > 0) { // if directed down
+            rocket->velocity->y *= -0.49; // collisions grab energy   
+          } else {
+            rocket->velocity->y *= -1;
+          }
+          
+          if (sqrt(rocket->velocity->y * rocket->velocity->y) < 0.08 && vars->y == 0) { // treshhold
+            rocket->velocity->y = 0;
+          }
+          rocket->velocity->x -= rocket->velocity->x * 0.04; // ground friction
+        }
+
+        if (sqrt(rocket->velocity->x * rocket->velocity->x) < 0.01) { // treshhold
+          rocket->velocity->x = 0;
+        }
+
+        
+        ////////////////////////////
+
+        rocket->velocity->limit(1);
+        rocket->location->add(rocket->velocity);
+        rocket->acceleration->mult(0);
+
+        // rocket->checkBorders();
+        // _lcd->printMemory();
+        
       }
 
       
@@ -101,17 +119,29 @@ class SpaceInvaders : public Gameplayer
       
       void rendering()
       {
+        _lcd->fillDisplayBuffer();         
 
-        _lcd->fillDisplayBuffer();
-        for (byte i = 0; i < 2; i++) {
+        _lcd->drawImage(
+              rocket4x8, sizeof(rocket4x8), 
+              rocket->location->x, 
+              rocket->location->y, 
+              4, 8, 0);
 
-          
-          _lcd->drawImage(
-                foods4x4, sizeof(foods4x4), 
-                objects[i]->location->x, 
-                objects[i]->location->y, 
-                4, 4, 0);
+        for (int i = 0; i < 10; i++) {
+          _lcd->putToBuffer(1, 45 + i, 46, false);
         }
+
+        vars->x = rocket->orientation->x;
+        vars->y = rocket->orientation->y;
+        vars->mult(0.2);
+        _lcd->putToBuffer(1, 42, 24, false);
+        vars->mult(20);
+        _lcd->putToBuffer(1, vars->x + 42, vars->y + 24, false);
+        vars->mult(2);
+        _lcd->putToBuffer(1, vars->x + 42, vars->y + 24, false);
+        vars->mult(1.3);
+        _lcd->putToBuffer(1, vars->x + 42, vars->y + 24, false);
+
         _lcd->showDisplayBuffer();
       }
 

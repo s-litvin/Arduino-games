@@ -25,18 +25,21 @@ void setup()
   char page = 1;
 
   while (choice == 0) {
+    lcd.cursorToXY(1, 2);
+    for (byte i = 0; i < 7; i++) lcd.LcdWriteString(" "); // clear LCD
+    lcd.cursorToXY(1, 2);
     delay(200);
     switch(page) {
       case 1:
-        lcd.LcdWriteString("1");
+        lcd.LcdWriteString("Snake");
         // lcd.drawImage(Snake::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
       case 2:
-        lcd.LcdWriteString("2");
+        lcd.LcdWriteString("Rocket");
         // lcd.drawImage(SpaceInvaders::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
       case 3:
-        lcd.LcdWriteString("3");
+        lcd.LcdWriteString("Slot");
         // lcd.drawImage(LibertyBell::getPreviewImg(), 504, 0, 0, 84, 48);
         break;
     }

@@ -67,11 +67,6 @@ class Snake : public Gameplayer
         return 250;
       }
 
-      static unsigned char * getPreviewImg()
-      {
-        return snake84x48;
-      }
-
       int getXPositionFromCellNumber(byte cell_number)
       {
         return (cell_number % 21) * 4;
@@ -157,13 +152,13 @@ class Snake : public Gameplayer
       void showScore()
       {
         initNewSnake();
-        _lcd->cursorToXY(8, 0);
-        _lcd->LcdWriteString("Your score:");
+        // _lcd->cursorToXY(8, 0);
+        // _lcd->LcdWriteString("Your score:");
 
-        char text[5];
-        sprintf(text, "%d", snakeSize);
-        _lcd->cursorToXY(33, 2);
-        _lcd->LcdWriteString(text);
+        // char text[5];
+        // sprintf(text, "%d", snakeSize);
+        // _lcd->cursorToXY(33, 2);
+        // _lcd->LcdWriteString(text);
 
         _lcd->cursorToXY(4, 4);
         _lcd->LcdWriteString("press button");

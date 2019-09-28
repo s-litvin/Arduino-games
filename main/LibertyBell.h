@@ -35,7 +35,7 @@ class LibertyBell : public Gameplayer
           while (digitalRead(BUTTON) && direction == 0) {
             direction = map(analogRead(A1), 0, 1024, -1, 2);
           }
-          rotations = random(10, 17);
+          rotations = 10;
         }
       }
       
@@ -78,19 +78,12 @@ class LibertyBell : public Gameplayer
               break;
           }
         }
-        
-
-        
+                
       }
 
       unsigned int getDelayBetweenFrames()
       {
         return 5;
-      }
-
-      static unsigned char * getPreviewImg()
-      {
-        return bell84x48;
       }
   
 };
